@@ -1,0 +1,98 @@
+\documentclass{article}
+\usepackage[spanish]{babel}
+\usepackage{arinv}
+
+\begin{document}
+
+\begin{invoice}
+
+% INVOICE INFORMATION
+	\logo{\includegraphics[scale=0.3]{MoldeoInteractiveLogo300ppp.png}}
+	\name{Coop. Trab. Moldeo Interactive Ltda.}
+	\documenttype{CUIT}
+	\documentnumber{30712007288}
+	\address{\mbox{Castillo 1336 12A}, \mbox{Buenos Aires}, \mbox{Ciudad Autónoma de Buenos Aires}, \mbox{Argentina}}
+	\taxiibb{1248845-03}
+	\taxcondition{IVA Responsable Inscripto}
+	\activityinit{01/09/2011}
+
+	\replica{ORIGINAL}
+	\codename{A}
+	\codeid{01}
+	\type{Factura}
+	\pointofsale{0003}
+	\number{00000000}
+	\date{Sin emitir}
+	\servicerange{01/10/2013}{31/10/2013}
+	\paydue{}
+%% Foot
+	\subtotal{7626,00}
+	\vatamount{630,00}
+	\taxamount{0,00}
+	\total{8256,00}
+	\currency{ARS}
+	\currencysymbol{\$}
+	\paymenterm{}
+	\comment{-}
+	\authorized{Comprobante No autorizado.}
+	\cbu{19100315-55003100186296}
+	\bank{Banco Credicoop Cooperativo Limitado}
+	\cae{-}
+	\caedue{-}
+	\barcode{3071200728801000300000000000000000000000} %% TODO: Calc bit
+
+% TAXES
+
+	\tax{IVA Ventas 21\%}{630,00}
+	\tax{IVA Ventas 10\%}{1,00}
+
+\startlines
+
+	\line{Consultoría OpenERP Reserva de horas mensual por soporte en el mantenimiento y desarrollo de OpenERP.}{10,000}{Hora(s)}{363,00}{-}{-}{3630,00}{0}
+	\line{Consultoría Moldeo}{1,000}{Hora(s)}{484,00}{-}{-}{484,00}{3630.0}
+	\line{Consultoría Moldeo}{1,000}{Hora(s)}{484,00}{-}{-}{484,00}{4114.0}
+	\line{Consultoría Moldeo}{1,000}{Hora(s)}{484,00}{-}{-}{484,00}{4598.0}
+	\line{Consultoría Moldeo}{1,000}{Hora(s)}{484,00}{-}{-}{484,00}{5082.0}
+	\line{Consultoría Moldeo}{1,000}{Hora(s)}{484,00}{-}{-}{484,00}{5566.0}
+	\line{Productos sin referencia}{1,000}{Unidad(es)}{1,21}{-}{-}{1,21}{6050.0}
+	\line{Servicio}{1,000}{Hora(s)}{75,00}{-}{-}{75,00}{6051.21}
+	\line{Consultoría OpenERP Reserva de horas mensual por soporte en el mantenimiento y desarrollo de OpenERP.}{1,000}{Hora(s)}{363,00}{-}{-}{363,00}{6126.21}
+	\line{Consultoría Moldeo}{1,000}{Hora(s)}{484,00}{-}{-}{484,00}{6489.21}
+	\line{Consultoría Moldeo}{1,000}{Hora(s)}{484,00}{-}{-}{484,00}{6973.21}
+	\line{Consultoría OpenERP Reserva de horas mensual por soporte en el mantenimiento y desarrollo de OpenERP.}{1,000}{Hora(s)}{363,00}{-}{-}{363,00}{7457.21}
+	\line{Consultoría Moldeo}{1,000}{Hora(s)}{484,00}{-}{-}{484,00}{7820.21}
+	\line{Servicio}{1,000}{Hora(s)}{75,00}{-}{-}{75,00}{8304.21}
+%%	\line{Consultoría OpenERP
+%%Reserva de horas mensual por soporte en el mantenimiento y desarrollo de OpenERP.}
+%%	     {1,000}
+%%	     {Hora(s)}
+%%	     {363,00}
+%%	     {-}
+%%	     {-}
+%%	     {363,00}
+%%	     {8379.21}
+	
+%%	\line{Servicio}
+%%	     {1,000}
+%%	     {Hora(s)}
+%%	     {75,00}
+%%	     {-}
+%%	     {-}
+%%	     {75,00}
+%%	     {8742.21}
+%%	
+%%	\line{Consultoría OpenERP
+%%Reserva de horas mensual por soporte en el mantenimiento y desarrollo de OpenERP.}
+%%	     {1,000}
+%%	     {Hora(s)}
+%%	     {363,00}
+%%	     {-}
+%%	     {-}
+%%	     {363,00}
+%%	     {8817.21}
+%%	
+
+\end{invoice}
+
+\end{document}
+

@@ -1,0 +1,452 @@
+\NeedsTeXFormat{LaTeX2e}[1994/12/01]
+\ProvidesPackage{invoice_ar}[2013/01/01 Invoice Document for Argentina]
+
+\RequirePackage[spanish]{babel}
+\RequirePackage[a4paper]{geometry}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{times}
+\RequirePackage{array}
+\RequirePackage{hyperref}
+\RequirePackage{ocr}
+\RequirePackage{textcomp}
+\RequirePackage{gensymb}
+\RequirePackage[code=2/5-Interleaved,X=0.32mm,H=2.0cm]{makebarcode}
+
+%% MACRO \inv@header
+%
+% Describe como se debe dibujar la cabeza de la factura.
+%
+\def\inv@header{
+  \vbox{
+  \noindent\sloppy 
+  \setlength{\extrarowheight}{2pt}
+  \begin{tabular}{|p{\dimexpr\textwidth-2\tabcolsep}|}
+  \hline
+    \parbox{\dimexpr\columnwidth-4\tabcolsep}{\centering \inv@replica} \\
+  \hline
+    \begin{tabular}{y{\dimexpr0.5\columnwidth-5\tabcolsep-1.5cm}y{3cm}y{\dimexpr0.5\columnwidth-5\tabcolsep-1.5cm}}
+      \parbox[p]{\dimexpr0.5\columnwidth-5\tabcolsep-1.5cm}{\inv@logo} 
+      & \fbox{ \parbox[p]{2cm}{\centering \Huge{\inv@codename} \\ \tiny{cod. \inv@codeid} } }
+    & \parbox[p]{\dimexpr0.5\columnwidth-5\tabcolsep-1.5cm}{
+      \vspace{5px} \Huge{\inv@type} \\
+      \vspace{2pt} \\
+      \small{Punto de Venta: \inv@pointofsale - Comp. Nro: \inv@id} \\
+      \small{Fecha de Emisión} : \inv@date} \\
+    \end{tabular}
+    \\
+  \hline
+    \begin{tabular}{z{\dimexpr0.23\columnwidth-4\tabcolsep}p{\dimexpr0.27\columnwidth-2\tabcolsep}}
+      Razón Social            & \inv@name         \\
+      Domicilio Comercial     & \inv@address      \\
+      Condición frente al IVA & \inv@taxcondition \\
+    \end{tabular}
+    \begin{tabular}{z{\dimexpr0.23\columnwidth-4\tabcolsep}p{\dimexpr0.27\columnwidth-2\tabcolsep}}
+      \inv@documenttype       & \inv@documentnumber \\
+      Ingresos Brutos         & \inv@taxiibb        \\
+      Inicio de Actividades   & \inv@activityinit   \\
+    \end{tabular}
+    \\
+  \hline
+  \hline
+    \begin{tabular}{x{\dimexpr0.57\columnwidth-2\tabcolsep}p{\dimexpr0.33\columnwidth-2\tabcolsep}}
+      Periodo facturado desde  \emph{\inv@servicestart} hasta \emph{\inv@serviceend}. & Fecha de Vto. para el pago: \inv@paydue. \\ 
+    \end{tabular}
+    \\
+  \hline
+    \begin{tabular}{z{\dimexpr0.23\columnwidth-4\tabcolsep}p{\dimexpr0.27\columnwidth-2\tabcolsep}}
+      Nombre~y~Apellido / Razón~Social & \inv@customername           \\
+      Domicilio Comercial     & \inv@customeraddress      \\
+    \end{tabular}
+    \begin{tabular}{z{\dimexpr0.23\columnwidth-4\tabcolsep}p{\dimexpr0.27\columnwidth-2\tabcolsep}}
+      \inv@customerdocumenttype        & \inv@customerdocumentnumber \\
+      Condición~frente~al~IVA & \inv@customertaxcondition \\
+    \end{tabular}
+    \\
+  \hline
+  \end{tabular} \\ [4pt]
+  } \\
+}
+
+%% MACRO: \inv@desheader
+%
+% Describe como se debe generar la cabeza de las descripciones.
+%
+\def\inv@desheader{
+  \vbox{
+    \noindent\sloppy 
+    \setlength{\extrarowheight}{2pt}
+    \begin{tabular}{y{\dimexpr0.28\textwidth-2\tabcolsep}
+                    y{\dimexpr0.12\textwidth-2\tabcolsep}
+                    y{\dimexpr0.12\textwidth-2\tabcolsep}
+                    y{\dimexpr0.12\textwidth-2\tabcolsep}
+                    y{\dimexpr0.12\textwidth-2\tabcolsep}
+                    y{\dimexpr0.12\textwidth-2\tabcolsep}
+                    y{\dimexpr0.12\textwidth-2\tabcolsep}}
+      Producto/Servicio &
+      Cantidad &
+      U.Medida &
+      Precio Unit. &
+      Bonif. &
+      Imp. Bonif. &
+      Subtotal
+    \end{tabular} \\
+  } \\
+}
+%% MACRO: \inv@line
+%
+% Describe como se debe generar cada linea de las descripciones.
+%
+%\def\linefill{\hfill}
+\newcommand \linefill {\leavevmode \cleaders \hb@xt@ .40em{\hss .\hss }\hfill \kern \z@}
+
+\def\inv@line#1#2#3#4#5#6#7{
+  \vbox{
+    \noindent\sloppy 
+    \setlength{\extrarowheight}{2pt}
+    \begin{tabular}{b{\dimexpr0.28\textwidth-2\tabcolsep}
+                    y{\dimexpr0.12\textwidth-2\tabcolsep}
+                    y{\dimexpr0.12\textwidth-2\tabcolsep}
+                    y{\dimexpr0.12\textwidth-2\tabcolsep}
+                    y{\dimexpr0.12\textwidth-2\tabcolsep}
+                    y{\dimexpr0.12\textwidth-2\tabcolsep}
+                    y{\dimexpr0.12\textwidth-2\tabcolsep}}
+
+      #1 \linefill &
+      \linefill~#2 &
+      #3 \linefill &
+      \linefill~#4 \inv@currencysymbol &
+      \linefill~#5 \linefill &
+      \linefill~#6 \inv@currencysymbol &
+      \linefill~#7 \inv@currencysymbol
+    \end{tabular}
+  }
+}
+
+%% MACRO: \inv@footer
+%
+% Describe como se debe generar el pie de la factura.
+%
+\def\inv@footer{
+  \vbox{
+  \noindent\sloppy 
+  \setlength{\extrarowheight}{2pt}
+  \begin{tabular}{|p{\dimexpr0.6\textwidth-2\tabcolsep}|p{\dimexpr0.4\textwidth-2\tabcolsep}|}
+    \hline
+      \parbox{\dimexpr0.6\columnwidth-6\tabcolsep}{
+        \smallskip 
+        El presente documento expresa su monto en {\inv@currency} ({\inv@currencysymbol}). \\
+        Termino de pago: {\inv@paymenterm} \\
+        \textbf{Información adicional} \\
+        \inv@comment \\
+        \smallskip
+      } &
+      \begin{tabular}{z{0.2\columnwidth}z{0.1\columnwidth}l}
+          \noalign{\vspace{4pt}}
+          Subtotal:               & {\inv@subtotal}  & {\inv@currencysymbol} \\
+          \inv@taxes                                                         % Print list of VATs
+          Importe Otros Tributos: & {\inv@taxamount} & {\inv@currencysymbol} \\
+          Total:                  & {\inv@total}     & {\inv@currencysymbol} \\
+          \noalign{\vspace{4pt}}
+      \end{tabular}\\
+    \hline
+      \parbox{\dimexpr0.6\columnwidth-6\tabcolsep}{
+        \smallskip
+         \textbf{\inv@authorized} \\
+         Verifique la validez del comprobante accediendo a \\
+         \tiny \url{http://www.afip.gob.ar/genericos/consultacae/Default.aspx} \\
+         \textbf{Información Bancaria} \\
+         CBU: {\inv@cbu} \\
+         Entidad Bancaria: {\inv@bank} \\
+        \smallskip
+      } &
+      \begin{tabular}{z{0.2\columnwidth}p{0.2\columnwidth}}
+          \noalign{\vspace{4pt}}
+         CAE N°:      & {\inv@cae} \\
+         Vencimiento: & {\inv@caedue} \\
+          \noalign{\vspace{4pt}}
+      \end{tabular} \\
+    \hline
+    \end{tabular} \\
+     \smallskip \\
+     \begin{tabular}{m{0.68\columnwidth}p{0.28\columnwidth}}
+       \centering
+       \begin{tabular}{c}
+         \oribarcode{\inv@barcode} \\
+         \ocrfamily \inv@barcode \\
+       \end{tabular} 
+       & Página: {\thepage} / {\pageref{\inv@id}} \\
+    \end{tabular}
+  }
+}
+
+%% MACRO: \inv@accumulated
+% 
+% #1: Text to show
+% #2: Accumulated amount
+% 
+\def\inv@accumulated#1#2{
+  \vbox{
+  \noindent\sloppy 
+  \setlength{\extrarowheight}{2pt}
+  \begin{tabular}{|p{\dimexpr0.9\textwidth-2\tabcolsep}p{\dimexpr0.1\textwidth-2\tabcolsep}|}
+    \hline
+    \hfill #1 & \hfill #2 \inv@currencysymbol \\
+    \hline
+  \end{tabular} \\
+  } \\
+}
+%
+% MACROS de comandos de configuracion
+%
+\def\inv@def@commands{
+  \gdef\inv@currencysymbol{Please setup \emph{currencysymbol}}
+  \def\currencysymbol##1{\gdef\inv@currencysymbol{##1}}
+  
+  \gdef\inv@logo{Please setup \emph{logo}}
+  \def\logo##1{\gdef\inv@logo{##1}}
+  
+  \gdef\inv@name{Please setup \emph{name}}
+  \def\name##1{\gdef\inv@name{##1}}
+  
+  \let\olddate=\date
+  \gdef\inv@date{Please setup \emph{date}}
+  \def\date##1{\gdef\inv@date{##1}}
+
+  \gdef\inv@documenttype{Please setup \emph{documenttype}}
+  \def\documenttype##1{\gdef\inv@documenttype{##1}}
+  
+  \gdef\inv@documentnumber{Please setup \emph{documentnumber}}
+  \def\documentnumber##1{\gdef\inv@documentnumber{##1}}
+  
+  \gdef\inv@address{Please setup \emph{address}}
+  \def\address##1{\gdef\inv@address{##1}}
+  
+  \gdef\inv@taxiibb{Please setup \emph{taxiibb}}
+  \def\taxiibb##1{\gdef\inv@taxiibb{##1}}
+  
+  \gdef\inv@taxcondition{Please setup \emph{taxcondition}}
+  \def\taxcondition##1{\gdef\inv@taxcondition{##1}}
+  
+  \gdef\inv@activityinit{Please setup \emph{activityinit}}
+  \def\activityinit##1{\gdef\inv@activityinit{##1}}
+  
+  \gdef\inv@replica{Please setup \emph{replica}}
+  \def\replica##1{\gdef\inv@replica{##1}}
+  
+  \gdef\inv@codename{Please setup \emph{codename}}
+  \def\codename##1{\gdef\inv@codename{##1}}
+  
+  \gdef\inv@codeid{Please setup \emph{codeid}}
+  \def\codeid##1{\gdef\inv@codeid{##1}}
+  
+  \gdef\inv@type{Please setup \emph{type}}
+  \def\type##1{\gdef\inv@type{##1}}
+  
+  \gdef\inv@pointofsale{Please setup \emph{pointofsale}}
+  \def\pointofsale##1{\gdef\inv@pointofsale{##1}}
+  
+  \gdef\inv@id{Please setup \emph{invnumber}}
+  \def\invnumber##1{\gdef\inv@id{##1}}
+  
+  \gdef\inv@taxcondition{Please setup \emph{taxcondition}}
+  \def\taxcondition##1{\gdef\inv@taxcondition{##1}}
+  
+  \gdef\inv@activityinit{Please setup \emph{activityinit}}
+  \def\activityinit##1{\gdef\inv@activityinit{##1}}
+  
+  \gdef\inv@codename{Please setup \emph{codename}}
+  \def\codename##1{\gdef\inv@codename{##1}}
+  
+  \gdef\inv@codeid{Please setup \emph{codeid}}
+  \def\codeid##1{\gdef\inv@codeid{##1}}
+  
+  \gdef\inv@type{Please setup \emph{type}}
+  \def\type##1{\gdef\inv@type{##1}}
+  
+  \gdef\inv@pointofsale{Please setup \emph{pointofsale}}
+  \def\pointofsale##1{\gdef\inv@pointofsale{##1}}
+  
+  \gdef\inv@paydue{Please setup \emph{paydue}}
+  \def\paydue##1{\gdef\inv@paydue{##1}}
+  
+  \gdef\inv@servicestart{Please setup \emph{servicestart}}
+  \gdef\inv@serviceend{Please setup \emph{serviceend}}
+  \def\servicerange##1##2{ \gdef\inv@servicestart{##1} \gdef\inv@serviceend{##2} }
+  
+  \gdef\inv@currency{Please setup \emph{currency}}
+  \def\currency##1{\gdef\inv@currency{##1}}
+  
+  \gdef\inv@paymenterm{Please setup \emph{paymenterm}}
+  \def\paymenterm##1{\gdef\inv@paymenterm{##1}}
+  
+  \gdef\inv@comment{Please setup \emph{comment}}
+  \def\comment##1{\gdef\inv@comment{##1}}
+  
+  \gdef\inv@subtotal{Please setup \emph{subtotal}}
+  \def\subtotal##1{\gdef\inv@subtotal{##1}}
+  
+  \gdef\inv@vatamount{Please setup \emph{vatamount}}
+  \def\vatamount##1{\gdef\inv@vatamount{##1}}
+  
+  \gdef\inv@taxamount{Please setup \emph{taxamount}}
+  \def\taxamount##1{\gdef\inv@taxamount{##1}}
+  
+  \gdef\inv@total{Please setup \emph{total}}
+  \def\total##1{\gdef\inv@total{##1}}
+  
+  \gdef\inv@authorized{Please setup \emph{authorized}}
+  \def\authorized##1{\gdef\inv@authorized{##1}}
+  
+  \gdef\inv@cbu{Please setup \emph{cbu}}
+  \def\cbu##1{\gdef\inv@cbu{##1}}
+  
+  \gdef\inv@bank{Please setup \emph{bank}}
+  \def\bank##1{\gdef\inv@bank{##1}}
+  
+  \gdef\inv@cae{Please setup \emph{cae}}
+  \def\cae##1{\gdef\inv@cae{##1}}
+  
+  \gdef\inv@caedue{Please setup \emph{caedue}}
+  \def\caedue##1{\gdef\inv@caedue{##1}}
+  
+  \let\oribarcode\barcode
+  \gdef\inv@barcode{Please setup \emph{barcode}}
+  \def\barcode##1{\gdef\inv@barcode{##1}}
+  
+  \gdef\inv@taxes{}
+  \def\tax##1##2{\expandafter\gdef\expandafter\inv@taxes\expandafter{\inv@taxes {##1}: & {##2} & {\inv@currencysymbol} \\}}
+
+  \gdef\inv@customerdocument{Please setup \emph{customerdocument}}
+  \gdef\inv@customerdocnumber{Please setup \emph{customerdocument}}
+  \def\customerdocument##1##2{
+    \gdef\inv@customerdocumenttype{##1}
+    \gdef\inv@customerdocumentnumber{##2}
+  }
+
+  \gdef\inv@customername{Please setup \emph{customername}}
+  \def\customername##1{\gdef\inv@customername{##1}}
+ 
+  \gdef\inv@customeraddress{Please setup \emph{customeraddress}}
+  \def\customeraddress##1{\gdef\inv@customeraddress{##1}}
+
+  \gdef\inv@customertaxcondition{Please setup \emph{customertaxcondition}}
+  \def\customertaxcondition##1{\gdef\inv@customertaxcondition{##1}}
+
+  \gdef\inv@salecondition{Please setup \emph{salecondition}}
+  \def\salecondition##1{\gdef\inv@salecondition{##1}}
+
+  \gdef\inv@deliverynote{Please setup \emph{deliverynote}}
+  \def\deliverynote##1{\gdef\inv@deliverynote{##1}}
+
+}
+
+%
+% Macros de formatos de columnas
+%
+
+% - Columnnas alineamiento en la base de la celda
+
+\newcolumntype{u}[1]{% Alineamiento a la derecha
+>{\raggedright\hspace{0pt}}b{#1}}%
+
+\newcolumntype{v}[1]{% Alineamiento centrado
+>{\centering\hspace{0pt}}b{#1}}%
+
+\newcolumntype{w}[1]{% Alineamiento a la izquierda
+>{\raggedleft\hspace{0pt}}b{#1}}%
+
+% - Columnnas alineamiento en el tope de la celda
+
+\newcolumntype{x}[1]{% Alineamiento a la derecha
+>{\raggedright\hspace{0pt}}p{#1}}%
+
+\newcolumntype{y}[1]{% Alineamiento centrado
+>{\centering\hspace{0pt}}p{#1}}%
+
+\newcolumntype{z}[1]{% Alineamiento a la izquierda
+>{\raggedleft\hspace{0pt}}p{#1}}%
+
+%% BOXES: Cajas donde se renderean las partes de la factura para calcular si hay cambio de página.
+%
+\newsavebox\inv@sb@header
+\newsavebox\inv@sb@transport
+\newsavebox\inv@sb@desheader
+\newsavebox\inv@sb@line
+\newsavebox\inv@sb@subtotal
+\newsavebox\inv@sb@footer
+
+%% ENVIRONMENT: Ambiente de la factura. Aquí se declaran las macros y se generan los calculos para los cambios de página.
+%
+\newenvironment{invoice}{
+  \pagestyle{empty}
+  \inv@def@commands
+  %% MACRO: \startdetail
+  % A partir de aquí se detalla la factura
+  \def\startdetail{
+    \newgeometry{ignoreall,top=1cm,bottom=1cm,left=1cm,right=1cm}
+    \begingroup
+    \setlength{\parindent}{0pt}
+    \setlength{\tabcolsep}{5pt}
+    \setcounter{inv@oldpage}{\thepage}
+    \setcounter{page}{1}
+    \sbox\inv@sb@header{\inv@header}
+    \sbox\inv@sb@desheader{\inv@desheader}
+    \copy\inv@sb@header
+    \copy\inv@sb@desheader
+  }
+  %% MACRO: \line
+  % Linea de una factura
+  %
+  % #1: Descripción del item
+  % #2: Cantidad
+  % #3: Unidad de Medida
+  % #4: Precio por Unidad
+  % #5: Bonficación
+  % #6: Importe Bonificado
+  % #7: Subtotal
+  % #8: Subtotal acumulado
+  %
+  \def\line##1##2##3##4##5##6##7##8{
+    \sbox\inv@sb@line{\inv@line{##1}{##2}{##3}{##4}{##5}{##6}{##7}}
+    \sbox\inv@sb@footer{\inv@footer}
+    \sbox\inv@sb@transport{\inv@accumulated{Transporte:}{##8}}
+    \sbox\inv@sb@subtotal{\inv@accumulated{Transporte + Subtotal:}{##8}}
+
+    \dimen@\pagetotal
+    \advance\dimen@+\ht\inv@sb@line
+    \advance\dimen@+\dp\inv@sb@line
+    \advance\dimen@+\ht\inv@sb@subtotal
+    \advance\dimen@+\dp\inv@sb@subtotal
+    \advance\dimen@+1.1\ht\inv@sb@footer
+    \advance\dimen@+\dp\inv@sb@footer
+    \advance\dimen@+5pt
+    \ifdim\dimen@<\pagegoal
+      \copy\inv@sb@line
+    \else
+      \vfill
+      \copy\inv@sb@subtotal
+      \copy\inv@sb@footer
+      \break
+      \copy\inv@sb@header
+      \copy\inv@sb@transport
+      \copy\inv@sb@desheader
+    \fi
+  }
+}{
+  \sbox\inv@sb@footer{\inv@footer}
+  \vfill\copy\inv@sb@footer
+  \label{\inv@id}
+  \endgroup
+  \restoregeometry
+  \pagestyle{plain}
+  \setcounter{page}{\theinv@oldpage}
+}
+
+%% COUNTER: \inv@page
+%
+% Numero de paginas por factura
+%
+\newcounter{inv@oldpage}
+\newcommand{\inv@totalpage}{ND}
+% vim:expandtab:smartindent:tabstop=2:softtabstop=2:shiftwidth=2
