@@ -11,7 +11,7 @@
 \RequirePackage{ocr}
 \RequirePackage{textcomp}
 \RequirePackage{gensymb}
-\RequirePackage[code=2/5-Interleaved,X=0.32mm,H=2.0cm]{makebarcode}
+\RequirePackage[code=2/5-Interleaved,X=0.191mm,H=1.0cm]{makebarcode}
 
 %% MACRO \inv@header
 %
@@ -168,15 +168,10 @@
       \end{tabular} \\
     \hline
     \end{tabular} \\
-     \smallskip \\
-     \begin{tabular}{m{0.68\columnwidth}p{0.28\columnwidth}}
-       \centering
-       \begin{tabular}{c}
-         \oribarcode{\inv@barcode} \\
-         \ocrfamily \inv@barcode \\
-       \end{tabular} 
-       & Página: {\thepage} / {\pageref{\inv@id}} \\
-    \end{tabular}
+    \hbox{
+      \parbox{\dimexpr0.6\textwidth}{\center \oribarcode{\inv@barcode} \\ \tiny \ocrfamily \inv@barcode} }
+      \parbox{\dimexpr0.4\textwidth}{\center Página: {\thepage} / {\pageref{\inv@id}}
+    }
   }
 }
 
@@ -355,6 +350,17 @@
 
 \newcolumntype{w}[1]{% Alineamiento a la izquierda
 >{\raggedleft\hspace{0pt}}b{#1}}%
+
+% - Columnnas alineamiento al medio de la celda
+
+\newcolumntype{i}[1]{% Alineamiento a la derecha
+>{\raggedright\hspace{0pt}}m{#1}}%
+
+\newcolumntype{j}[1]{% Alineamiento centrado
+>{\centering\hspace{0pt}}m{#1}}%
+
+\newcolumntype{k}[1]{% Alineamiento a la izquierda
+>{\raggedleft\hspace{0pt}}m{#1}}%
 
 % - Columnnas alineamiento en el tope de la celda
 
