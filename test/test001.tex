@@ -1,35 +1,39 @@
 \documentclass{article}
-\usepackage[spanish]{babel}
-\usepackage{arinv}
+\usepackage{graphicx}
+\usepackage{invoice_ar}
+\usepackage{draftwatermark}
 
-\begin{document}
-
+\newcommand{\myinvoice}[1]{
 \begin{invoice}
+	\replica{#1}
 
 % INVOICE INFORMATION
-	\logo{\includegraphics[scale=0.3]{MoldeoInteractiveLogo300ppp.png}}
+	\logo{\includegraphics[width=0.3\textwidth]{MoldeoInteractiveLogo300ppp.png}}
 	\name{Coop. Trab. Moldeo Interactive Ltda.}
-	\documenttype{CUIT}
-	\documentnumber{30712007288}
+	\document{CUIT}{30712007288}
 	\address{\mbox{Castillo 1336 12A}, \mbox{Buenos Aires}, \mbox{Ciudad Autónoma de Buenos Aires}, \mbox{Argentina}}
 	\taxiibb{1248845-03}
 	\taxcondition{IVA Responsable Inscripto}
 	\activityinit{01/09/2011}
 
-	\replica{ORIGINAL}
 	\codename{A}
 	\codeid{01}
 	\type{Factura}
 	\pointofsale{0003}
-	\number{00000000}
+	\invnumber{00000000}
 	\date{Sin emitir}
 	\servicerange{01/10/2013}{31/10/2013}
 	\paydue{}
+	
+	\customername{Cristian S. Rocha}
+	\customerdocument{DNI}{25095454}
+	\customertaxcondition{Responsable Monotributo}
+	\customeraddress{Av. Rivadavia 9858 8 D}
+
+	\salecondition{Efectivo}
+	\deliverynote{}
+
 %% Foot
-	\subtotal{7626,00}
-	\vatamount{630,00}
-	\taxamount{0,00}
-	\total{8256,00}
 	\currency{ARS}
 	\currencysymbol{\$}
 	\paymenterm{}
@@ -43,10 +47,13 @@
 
 % TAXES
 
-	\tax{IVA Ventas 21\%}{630,00}
-	\tax{IVA Ventas 10\%}{1,00}
+	\begin{total}{7626,00}{8256,00}
+	IVA Ventas 21\% & 630,00 & \\
+	IVA Ventas 10\% &   1,00 & \\
+	\end{total}
 
-\startlines
+
+\startdetail
 
 	\line{Consultoría OpenERP Reserva de horas mensual por soporte en el mantenimiento y desarrollo de OpenERP.}{10,000}{Hora(s)}{363,00}{-}{-}{3630,00}{0}
 	\line{Consultoría Moldeo}{1,000}{Hora(s)}{484,00}{-}{-}{484,00}{3630.0}
@@ -62,37 +69,44 @@
 	\line{Consultoría OpenERP Reserva de horas mensual por soporte en el mantenimiento y desarrollo de OpenERP.}{1,000}{Hora(s)}{363,00}{-}{-}{363,00}{7457.21}
 	\line{Consultoría Moldeo}{1,000}{Hora(s)}{484,00}{-}{-}{484,00}{7820.21}
 	\line{Servicio}{1,000}{Hora(s)}{75,00}{-}{-}{75,00}{8304.21}
-%%	\line{Consultoría OpenERP
-%%Reserva de horas mensual por soporte en el mantenimiento y desarrollo de OpenERP.}
-%%	     {1,000}
-%%	     {Hora(s)}
-%%	     {363,00}
-%%	     {-}
-%%	     {-}
-%%	     {363,00}
-%%	     {8379.21}
+	\line{Consultoría OpenERP
+Reserva de horas mensual por soporte en el mantenimiento y desarrollo de OpenERP.}
+	     {1,000}
+	     {Hora(s)}
+	     {363,00}
+	     {-}
+	     {-}
+	     {363,00}
+	     {8379.21}
+      
+	\line{Servicio}
+	     {1,000}
+	     {Hora(s)}
+	     {75,00}
+	     {-}
+	     {-}
+	     {75,00}
+	     {8742.21}
 	
-%%	\line{Servicio}
-%%	     {1,000}
-%%	     {Hora(s)}
-%%	     {75,00}
-%%	     {-}
-%%	     {-}
-%%	     {75,00}
-%%	     {8742.21}
-%%	
-%%	\line{Consultoría OpenERP
-%%Reserva de horas mensual por soporte en el mantenimiento y desarrollo de OpenERP.}
-%%	     {1,000}
-%%	     {Hora(s)}
-%%	     {363,00}
-%%	     {-}
-%%	     {-}
-%%	     {363,00}
-%%	     {8817.21}
-%%	
+	\line{Consultoría OpenERP
+Reserva de horas mensual por soporte en el mantenimiento y desarrollo de OpenERP.}
+	     {1,000}
+	     {Hora(s)}
+	     {363,00}
+	     {-}
+	     {-}
+	     {363,00}
+	     {8817.21}
+	
 
 \end{invoice}
+}
+
+\begin{document}
+
+ \myinvoice{ORIGINAL}
+ \myinvoice{DUPLICADO}
+ \myinvoice{TRIPLICADO}
 
 \end{document}
 

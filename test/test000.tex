@@ -25,8 +25,7 @@
   \name{Coop. Trab. Moldeo Interactive Ltda.}
   \address{Castillo 1336 12A, Buenos Aires, Ciudad Autónoma de Buenos Aires, Argentina}
   \taxcondition{IVA Responsable Inscripto}
-  \documenttype{CUIT}
-  \documentnumber{30712007288}
+  \document{CUIT}{30712007288}
   \taxiibb{1248845-03}
   \activityinit{01/09/2011}
   \servicerange{01/10/2013}{31/10/2013}
@@ -40,10 +39,6 @@
   \salecondition{Efectivo}
   \deliverynote{}
 
-  \subtotal{7626,00}
-  \vatamount{630,00}
-  \taxamount{0,00}
-  \total{8256,00}
   \currency{ARS}
   \currencysymbol{\$}
   \paymenterm{}
@@ -62,9 +57,18 @@ por haberlo dicho yo.}
 
 % TAXES
 
-  \tax{IVA Ventas 21\%}{630,00}
-  \tax{IVA Ventas 10\%}{1,00}
+\begin{taxes}{117.56}
+Per./Ret. de Impuesto a las Ganancias & & 1 & 111,11 \\
+Per./Ret. de IVA                      & & 2 &   4,44 \\
+Per./Ret. de Ingresos Brutos          & & 3 &   0,99 \\
+Impuestos Internos                    & & 1 &   0.21 \\
+Impuestos Municipales                 & & 5 &   0.60 \\
+\end{taxes}
 
+\begin{total}{7626,00}{8256,00}
+IVA Ventas 21\% & 630,00 & \\
+IVA Ventas 10\% &   1,00 & \\
+\end{total}
 
 \startdetail
 
@@ -149,7 +153,7 @@ description }{2}{3}{4}{5}{6}{7}{8}
 \line{1}{2}{3}{4}{5}{6}{7}{8}
 \line{1}{2}{3}{4}{5}{6}{7}{8}
 \line{1}{2}{3}{4}{5}{6}{7}{8}
-\line{1}{2}{3}{4}{5}{6}{7}{8}
+\line{Last item}{2}{3}{4}{5}{6}{7}{8}
 
 \end{invoice}
 
