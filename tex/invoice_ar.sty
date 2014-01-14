@@ -44,12 +44,12 @@
     \end{tabular}
     \\
     \small
-    \begin{tabular}{z{\dimexpr0.20\columnwidth-4\tabcolsep}p{\dimexpr0.30\columnwidth-2\tabcolsep}|}
+    \begin{tabular}{z{\dimexpr0.20\columnwidth-4\tabcolsep}@{\parbox{\tabcolsep}{:}}p{\dimexpr0.30\columnwidth-2\tabcolsep}|}
       Razón Social            & \inv@name         \\
       Domicilio Comercial     & \inv@address      \\
       Condición frente al IVA & \inv@taxcondition \\
     \end{tabular}
-    \begin{tabular}{z{\dimexpr0.20\columnwidth-4\tabcolsep}p{\dimexpr0.30\columnwidth-2\tabcolsep}}
+    \begin{tabular}{z{\dimexpr0.20\columnwidth-4\tabcolsep}@{\parbox{\tabcolsep}{:}}p{\dimexpr0.30\columnwidth-2\tabcolsep}}
       \inv@documenttype       & \inv@documentnumber \\
       Ingresos Brutos         & \inv@taxiibb        \\
       Inicio de Actividades   & \inv@activityinit   \\
@@ -61,12 +61,12 @@
   \hline
   \hline
     \small
-    \begin{tabular}{z{\dimexpr0.20\columnwidth-4\tabcolsep}p{\dimexpr0.30\columnwidth-2\tabcolsep}}
+    \begin{tabular}{z{\dimexpr0.20\columnwidth-4\tabcolsep}@{\parbox{\tabcolsep}{:}}p{\dimexpr0.30\columnwidth-2\tabcolsep}}
       \inv@customerdocumenttype & \inv@customerdocumentnumber \\
       Domicilio Comercial       & \inv@customeraddress        \\
       Condición de Venta        & \inv@salecondition          \\
     \end{tabular}
-    \begin{tabular}{z{\dimexpr0.30\columnwidth-4\tabcolsep}p{\dimexpr0.20\columnwidth-2\tabcolsep}}
+    \begin{tabular}{z{\dimexpr0.30\columnwidth-4\tabcolsep}@{\parbox{\tabcolsep}{:}}p{\dimexpr0.20\columnwidth-2\tabcolsep}}
       Nombre~y~Apellido / Razón~Social & \inv@customername         \\
       Condición frente al IVA          & \inv@customertaxcondition \\
       Remito                           & \inv@deliverynote        \\
@@ -101,25 +101,26 @@
 %
 % Describe como se debe generar cada linea de las descripciones.
 %
+\def\linefill{}
 %\def\linefill{\hfill}
-\newcommand \linefill {\leavevmode \cleaders \hb@xt@ .40em{\hss .\hss }\hfill \kern \z@}
+%\newcommand \linefill {\leavevmode \cleaders \hb@xt@ .40em{\hss .\hss }\hfill \kern \z@}
 
 \def\inv@line#1#2#3#4#5#6#7{
-    \begin{tabular}{b{\dimexpr0.28\textwidth-2\tabcolsep}
-                    y{\dimexpr0.12\textwidth-2\tabcolsep}
-                    y{\dimexpr0.12\textwidth-2\tabcolsep}
-                    y{\dimexpr0.12\textwidth-2\tabcolsep}
-                    y{\dimexpr0.12\textwidth-2\tabcolsep}
-                    y{\dimexpr0.12\textwidth-2\tabcolsep}
-                    y{\dimexpr0.12\textwidth-2\tabcolsep}}
+    \begin{tabular}{D{\dimexpr0.28\textwidth-2\tabcolsep}
+                    Q{\dimexpr0.12\textwidth-2\tabcolsep}
+                    D{\dimexpr0.12\textwidth-2\tabcolsep}
+                    M{\dimexpr0.12\textwidth-2\tabcolsep}
+                    P{\dimexpr0.11\textwidth-2\tabcolsep}
+                    M{\dimexpr0.12\textwidth-2\tabcolsep}
+                    M{\dimexpr0.13\textwidth-2\tabcolsep}}
 
-      #1 \linefill &
-      \linefill~#2 &
-      #3 \linefill &
-      \linefill~#4 \inv@currencysymbol &
-      \linefill~#5 \% \linefill &
-      \linefill~#6 \inv@currencysymbol &
-      \linefill~#7 \inv@currencysymbol
+      #1 &
+      #2 &
+      #3 &
+      #4 &
+      #5 &
+      #6 &
+      #7 
     \end{tabular}
 }
 
@@ -312,6 +313,8 @@
   \gdef\inv@barcode{Please setup \emph{barcode}}
   \def\barcode##1{\gdef\inv@barcode{##1}}
 
+  \gdef\inv@tax@total{0,00}
+
   \newenvironment{taxes}[1]
   {
     \gdef\inv@tax@total{##1}
@@ -413,6 +416,24 @@
 \newcolumntype{z}[1]{% Alineamiento a la izquierda
 >{\raggedleft\hspace{0pt}}p{#1}}%
 
+% - Columnas con tipos de datos
+\newcolumntype{M}[1]{% Monetarios
+>{\raggedleft\hspace{0pt}\linefill}b{#1}<{~\$}
+}%
+\newcolumntype{P}[1]{% Porcentual
+>{\centering\hspace{0pt}\linefill}b{#1}<{~\%}
+}%
+\newcolumntype{Q}[1]{% Cantidad
+>{\raggedleft\hspace{0pt}\linefill}b{#1}
+}%
+\newcolumntype{D}[1]{% Descripcion
+>{\raggedright\hspace{0pt}}b{#1}
+<{~\linefill}
+}%
+
+
+
+
 %% BOXES: Cajas donde se renderean las partes de la factura para calcular si hay cambio de página.
 %
 \newsavebox\inv@sb@header
@@ -476,6 +497,8 @@
     \advance\dimen@+\dp\inv@sb@line
     \advance\dimen@+\ht\inv@sb@endpage
     \advance\dimen@+\dp\inv@sb@endpage
+    \advance\dimen@+\ht\inv@sb@total
+    \advance\dimen@+\dp\inv@sb@total
     \advance\dimen@+\ht\inv@sb@subtotal
     \advance\dimen@+\dp\inv@sb@subtotal
     \advance\dimen@+1.1\ht\inv@sb@footer
