@@ -1,5 +1,5 @@
 TEXINPUTS=../tex:
-SRC=test000.tex
+SRC=test000.tex test001.tex
 #test001.tex
 OBJ=${SRC:.tex=.pdf}
 LOG=${SRC:.tex=.log}
@@ -14,7 +14,7 @@ clean:
 
 %.pdf: %.tex
 	while (TEXINPUTS=${TEXINPUTS} pdflatex $<; \
-		grep "Rerun to get outlines right" ${LOG};);\
+		grep "Rerun to get" $*.log;);\
 	       do true;\
 	done 
 
