@@ -17,6 +17,14 @@
 \RequirePackage{textcomp}
 \RequirePackage{txfonts}
 \RequirePackage{etoolbox}
+\RequirePackage{transparent}
+\RequirePackage{colortbl}
+
+\definecolor{LightCyan}{rgb}{0.88,1,1}
+\definecolor{Gray}{rgb}{0.88,0.88,0.88}
+\definecolor{LightGray}{rgb}{0.98,0.98,0.98}
+
+\newcounter{line}
 
 \def\generatedby#1{\def\inv@generatedby{#1}}
 \generatedby{Generado con \LaTeX{}}
@@ -37,19 +45,19 @@
     & \parbox[p]{1.5cm}{\centering \Huge{\inv@codename} \\ \tiny{cod. \inv@codeid} }
     & \hspace*{5pt}\parbox[p]{\dimexpr0.5\columnwidth-5\tabcolsep-1.5cm}{
       \Huge{\inv@type} ~\\
-      \small{Punto de Venta: \inv@pointofsale - Comp. \textnumero: \inv@id} \\
+      \small{Punto de Venta: \inv@pointofsale \hspace*{0.5cm} Comp. \textnumero: \inv@id} \\
       \small{Fecha de Emisión} : \inv@date
       }\\ 
       \cline{2-2}
     \end{tabular}
     \\
     \small
-    \begin{tabular}{z{\dimexpr0.20\columnwidth-4\tabcolsep}@{\parbox{\tabcolsep}{:}}p{\dimexpr0.30\columnwidth-2\tabcolsep}|}
+    \begin{tabular}{z{\dimexpr0.20\columnwidth-4\tabcolsep}@{\parbox{2\tabcolsep}{:}}p{\dimexpr0.30\columnwidth-2\tabcolsep}|}
       Razón Social            & \inv@name         \\
       Domicilio Comercial     & \inv@address      \\
       Condición frente al IVA & \inv@taxcondition \\
     \end{tabular}
-    \begin{tabular}{z{\dimexpr0.20\columnwidth-4\tabcolsep}@{\parbox{\tabcolsep}{:}}p{\dimexpr0.30\columnwidth-2\tabcolsep}}
+    \begin{tabular}{z{\dimexpr0.20\columnwidth-4\tabcolsep}@{\parbox{2\tabcolsep}{:}}p{\dimexpr0.30\columnwidth-2\tabcolsep}}
       \inv@documenttype       & \inv@documentnumber \\
       Ingresos Brutos         & \inv@taxiibb        \\
       Inicio de Actividades   & \inv@activityinit   \\
@@ -81,6 +89,7 @@
 % Describe como se debe generar la cabeza de las descripciones.
 %
 \def\inv@desheader{
+    \textbf{
     \begin{tabular}{y{\dimexpr0.28\textwidth-2\tabcolsep}
                     y{\dimexpr0.12\textwidth-2\tabcolsep}
                     y{\dimexpr0.12\textwidth-2\tabcolsep}
@@ -96,6 +105,7 @@
       Imp. Bonif. &
       Subtotal
     \end{tabular}
+  }
 }
 %% MACRO: \inv@line
 %
@@ -106,22 +116,32 @@
 %\newcommand \linefill {\leavevmode \cleaders \hb@xt@ .40em{\hss .\hss }\hfill \kern \z@}
 
 \def\inv@line#1#2#3#4#5#6#7{
-    \begin{tabular}{D{\dimexpr0.28\textwidth-2\tabcolsep}
-                    Q{\dimexpr0.12\textwidth-2\tabcolsep}
-                    D{\dimexpr0.12\textwidth-2\tabcolsep}
-                    M{\dimexpr0.12\textwidth-2\tabcolsep}
-                    P{\dimexpr0.11\textwidth-2\tabcolsep}
-                    M{\dimexpr0.12\textwidth-2\tabcolsep}
-                    M{\dimexpr0.13\textwidth-2\tabcolsep}}
-
-      #1 &
-      #2 &
-      #3 &
-      #4 &
-      #5 &
-      #6 &
-      #7 
-    \end{tabular}
+  \transparent{0.6}%
+  \begin{tabular}{D{\dimexpr0.28\textwidth-2\tabcolsep}
+                  Q{\dimexpr0.12\textwidth-2\tabcolsep}
+                  D{\dimexpr0.12\textwidth-2\tabcolsep}
+                  M{\dimexpr0.12\textwidth-2\tabcolsep}
+                  P{\dimexpr0.11\textwidth-2\tabcolsep}
+                  M{\dimexpr0.12\textwidth-2\tabcolsep}
+                  M{\dimexpr0.13\textwidth-2\tabcolsep}}
+  \ifodd\theline\rowcolor{Gray}\else\rowcolor{LightGray}\fi
+  \transparent{1.0}%
+    #1 &
+  \transparent{1.0}%
+    #2 &
+  \transparent{1.0}%
+    #3 &
+  \transparent{1.0}%
+    #4 &
+  \transparent{1.0}%
+    #5 &
+  \transparent{1.0}%
+    #6 &
+  \transparent{1.0}%
+    #7 
+  \end{tabular}
+  \stepcounter{line}
+  \transparent{1.0}%
 }
 
 %% MACRO: \inv@endpage
@@ -348,13 +368,7 @@
     \end{tabular}
     \end{lrbox}
   }
-  
-  %  \gdef\inv@taxes{}
-  %  \def\tax##1##2##3##4{\expandafter\gdef\expandafter\inv@taxes\expandafter{\inv@taxes {##1} & {##2} & {##3} & {##4} {\inv@currencysymbol} \\}}
-  %
-  %  \gdef\inv@vats{}
-  %  \def\vat##1##2{\expandafter\gdef\expandafter\inv@taxes\expandafter{\inv@vats {##1}: & {##2} & {\inv@currencysymbol} \\}}
-
+ 
   \gdef\inv@customerdocumenttype{Please setup \emph{customerdocument}}
   \gdef\inv@customerdocumentnumber{Please setup \emph{customerdocument}}
   \def\customerdocument##1##2{
@@ -431,9 +445,6 @@
 <{~\linefill}
 }%
 
-
-
-
 %% BOXES: Cajas donde se renderean las partes de la factura para calcular si hay cambio de página.
 %
 \newsavebox\inv@sb@header
@@ -466,6 +477,7 @@
     \begingroup
     \setcounter{inv@oldpage}{\thepage}
     \setcounter{page}{1}
+    \setcounter{line}{1}
     \sbox\inv@sb@header{\inv@header}
     \sbox\inv@sb@desheader{\inv@desheader}
     \sbox\inv@sb@endpage{\inv@endpage}
@@ -493,16 +505,14 @@
     \sbox\inv@sb@subtotal{\inv@accumulated{\inv@sbmsg}{##8}}
 
     \dimen@\pagetotal
-    \advance\dimen@+\ht\inv@sb@line
-    \advance\dimen@+\dp\inv@sb@line
+    \advance\dimen@+3\ht\inv@sb@line
+    \advance\dimen@+3\dp\inv@sb@line
     \advance\dimen@+\ht\inv@sb@endpage
     \advance\dimen@+\dp\inv@sb@endpage
-    \advance\dimen@+\ht\inv@sb@total
-    \advance\dimen@+\dp\inv@sb@total
     \advance\dimen@+\ht\inv@sb@subtotal
     \advance\dimen@+\dp\inv@sb@subtotal
-    \advance\dimen@+1.1\ht\inv@sb@footer
-    \advance\dimen@+1.1\dp\inv@sb@footer
+    \advance\dimen@+\ht\inv@sb@footer
+    \advance\dimen@+\dp\inv@sb@footer
     \advance\dimen@+5pt
     \ifdim\dimen@<\pagegoal
       \copy\inv@sb@line
@@ -522,6 +532,24 @@
 }{
   \sbox\inv@sb@footer{\inv@footer}
   \copy\inv@sb@enddetail
+
+  \dimen@\pagetotal
+  \advance\dimen@+\ht\inv@sb@tax
+  \advance\dimen@+\dp\inv@sb@tax
+  \advance\dimen@+\ht\inv@sb@subtotal
+  \advance\dimen@+\dp\inv@sb@subtotal
+  \advance\dimen@+1.1\ht\inv@sb@footer
+  \advance\dimen@+1.1\dp\inv@sb@footer
+  \advance\dimen@+5pt
+  \ifdim\dimen@<\pagegoal
+    % Entra todo en la página.
+  \else
+    % Necesitamos una nueva página
+    \vfill
+    \copy\inv@sb@footer
+    \break
+    \copy\inv@sb@header
+  \fi
   \vfill
   \copy\inv@sb@tax
   \copy\inv@sb@footer
